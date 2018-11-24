@@ -6,4 +6,5 @@ export interface StartOptions {
     saveDirectory?: string;
     fileName?: string;
     headers?: Headers;
+    forceParallel?: boolean;
 }

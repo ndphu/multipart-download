@@ -25,8 +25,8 @@ export class BufferOperation implements Operation {
                 })
                 .on('data', (data, offset) => {
                     this.emitter.emit('data', data, offset);
-
                     data.copy(buffer, offset);
+                    this.emitter.emit('progress', buffer.length, contentLength);
                 })
                 .on('end', () => {
                     if (++endCounter === numOfConnections) {

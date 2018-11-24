@@ -36,6 +36,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
         let directory: string;
         let file: string;
         let headers: Headers;
+        let writeToBuffer: boolean = false;
         
         if (startOptions) {
             connections = startOptions.numOfConnections ?
@@ -44,13 +45,15 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
             directory = startOptions.saveDirectory;
             file = startOptions.fileName;
             headers = startOptions.headers;
+            writeToBuffer = startOptions.writeToBuffer;
         }
 
         const options: StartOptions = {
             numOfConnections: connections,
             saveDirectory: directory,
             fileName: file,
-            headers: headers
+            headers: headers,
+            writeToBuffer: writeToBuffer,
         };
 
         return options;
@@ -66,7 +69,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
                     this.emit('error', metadataError);
                 }
 
-                if (metadata.acceptRanges !== AcceptRanges.Bytes) {
+                if (metadata.acceptRanges !== AcceptRanges.Bytes && !options.forceParallel) {
                     options.numOfConnections = MultipartDownload.SINGLE_CONNECTION;
                 }
 
